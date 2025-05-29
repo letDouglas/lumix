@@ -2,7 +2,6 @@ from PIL import Image
 
 def overlay_car_on_background(car_image_path, background_image_path, output_path):
     car_image = Image.open(car_image_path).convert("RGBA")
-
     background_image = Image.open(background_image_path).convert("RGBA")
 
     new_width = 900

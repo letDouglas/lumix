@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <title>Diagramma di Architettura - Rendering Service</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --glow-color-success1: #00ff00;
+            --glow-color-success2: rgba(0, 255, 0, 0.9);
+            --glow-color-success3: rgba(0, 255, 0, 0.6);
+            --glow-color-error1: #ff0000;
+            --glow-color-error2: rgba(255, 0, 0, 0.9);
+            --glow-color-error3: rgba(255, 0, 0, 0.6);
+            --current-glow1: var(--glow-color-success1);
+            --current-glow2: var(--glow-color-success2);
+            --current-glow3: var(--glow-color-success3);
+        }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #00ff88;
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+            font-weight: 800;
+        }
+
+        .header p {
+            color: #cccccc;
+            font-size: 1rem;
+            margin: 8px 0 0 0;
+            font-weight: 500;
+        }
+
+        .diagram-container {
+            background: #111111;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            border: 2px solid #333333;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .mermaid {
+            width: 100%;
+            text-align: center;
+            min-height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg g.edgePath > path.path {
+            stroke-width: 3px !important;
+            stroke: #444444 !important;
+            opacity: 0.3 !important;
+            transition: stroke 0.3s ease, opacity 0.3s ease, stroke-width 0.3s ease !important;
+        }
+        svg g.edgePath > path.arrowhead {
+            stroke-width: 1px !important;
+            stroke: #444444 !important;
+            fill: #444444 !important;
+            opacity: 0.3 !important;
+            transition: stroke 0.3s ease, fill 0.3s ease, opacity 0.3s ease !important;
+        }
+
+        svg defs marker path {
+            fill: #444444 !important;
+            stroke: #444444 !important;
+            opacity: 0.3 !important;
+            transition: fill 0.3s ease, stroke 0.3s ease, opacity 0.3s ease !important;
+        }
+
+        svg g.edgePath > path.path.flow-active {
+            stroke-width: 14px !important;
+            opacity: 1 !important;
+            animation: megaGlowActiveArrow 1.2s ease-in-out infinite alternate !important;
+        }
+
+        svg g.edgePath > path.path.flow-active.flow-success {
+            stroke: var(--glow-color-success1) !important;
+            --current-glow1: var(--glow-color-success1);
+            --current-glow2: var(--glow-color-success2);
+            --current-glow3: var(--glow-color-success3);
+        }
+
+        svg g.edgePath > path.path.flow-active.flow-error {
+            stroke: var(--glow-color-error1) !important;
+            --current-glow1: var(--glow-color-error1);
+            --current-glow2: var(--glow-color-error2);
+            --current-glow3: var(--glow-color-error3);
+        }
+
+        @keyframes megaGlowActiveArrow {
+            0% {
+                stroke-width: 14px;
+                filter: drop-shadow(0 0 20px var(--current-glow1))
+                drop-shadow(0 0 35px var(--current-glow2))
+                drop-shadow(0 0 50px var(--current-glow3));
+            }
+            100% {
+                stroke-width: 18px;
+                filter: drop-shadow(0 0 30px var(--current-glow1))
+                drop-shadow(0 0 50px var(--current-glow2))
+                drop-shadow(0 0 70px var(--current-glow3));
+            }
+        }
+
+        svg g.edgePath > path.arrowhead.arrowhead-active {
+            stroke-width: 1px !important;
+            opacity: 1 !important;
+        }
+
+        svg g.edgePath > path.arrowhead.arrowhead-active.arrowhead-success {
+            stroke: var(--glow-color-success1) !important;
+            fill: var(--glow-color-success1) !important;
+            filter: drop-shadow(0 0 10px var(--glow-color-success1)) !important;
+        }
+
+        svg g.edgePath > path.arrowhead.arrowhead-active.arrowhead-error {
+            stroke: var(--glow-color-error1) !important;
+            fill: var(--glow-color-error1) !important;
+            filter: drop-shadow(0 0 10px var(--glow-color-error1)) !important;
+        }
+
+        svg defs marker path.arrowhead-marker-active.arrowhead-marker-success {
+            fill: var(--glow-color-success1) !important;
+            stroke: var(--glow-color-success1) !important;
+            opacity: 1 !important;
+        }
+        svg defs marker path.arrowhead-marker-active.arrowhead-marker-error {
+            fill: var(--glow-color-error1) !important;
+            stroke: var(--glow-color-error1) !important;
+            opacity: 1 !important;
+        }
+
+        svg g.node.node-active rect,
+        svg g.node.node-active circle,
+        svg g.node.node-active polygon,
+        svg g.node.node-active ellipse,
+        svg g.node.node-active path {
+            filter: drop-shadow(0 0 25px #00ff88) brightness(1.5) !important;
+            stroke: #00ff88 !important;
+            stroke-width: 5px !important;
+            animation: superNodeGlow 1s ease-in-out infinite alternate !important;
+        }
+
+        @keyframes superNodeGlow {
+            0% { filter: drop-shadow(0 0 25px #00ff88) brightness(1.5); stroke-width: 5px; }
+            100% { filter: drop-shadow(0 0 40px #00ff88) brightness(1.7); stroke-width: 7px; }
+        }
+
+        svg .nodeLabel { fill: #ffffff !important; font-weight: 900 !important; font-size: 15px !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.9) !important; }
+        svg .cluster rect { stroke: #555555 !important; stroke-width: 2px !important; fill: rgba(255,255,255,0.02) !important; }
+        svg .cluster .label { fill: #ffffff !important; font-weight: 800 !important; font-size: 16px !important; text-shadow: 2px 2px 6px rgba(0,0,0,0.9) !important; }
+        svg .edgeLabel { fill: #ffffff !important; font-weight: 700 !important; font-size: 13px !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.9) !important; }
+
+        .control-panel { margin-top: 25px; text-align: center; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; width: 100%; max-width: 1400px; }
+        .control-btn { background: linear-gradient(45deg, #00ff88, #00cc6a); color: #000000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; min-width: 120px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 3px 15px rgba(0,255,136,0.3); }
+        .control-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,255,136,0.5); }
+        .control-btn.reset { background: linear-gradient(45deg, #ff6b35, #ff8a65); color: #ffffff; box-shadow: 0 3px 15px rgba(255,107,53,0.3); }
+        .control-btn.reset:hover { box-shadow: 0 6px 20px rgba(255,107,53,0.5); }
+        .status-panel { margin-top: 20px; text-align: center; font-size: 1.1rem; color: #00ff88; min-height: 50px; background: rgba(0,255,136,0.1); padding: 15px; border-radius: 12px; border: 2px solid rgba(0,255,136,0.3); font-weight: 600; text-shadow: 0 0 8px rgba(0,255,136,0.5); width: 100%; max-width: 1400px; box-sizing: border-box; }
+        .step-counter { font-size: 1.5rem; color: #ff0066; font-weight: 900; text-shadow: 0 0 12px rgba(255,0,102,0.8); margin-bottom: 8px; }
+        .legend { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 0.85rem; width: 100%; max-width: 1400px; }
+        .legend-item { display: flex; align-items: center; padding: 10px 15px; border-radius: 8px; background: rgba(255,255,255,0.03); border-left: 4px solid; font-weight: 600; }
+        .legend-client { border-left-color: #ff1493; color: #ff1493; }
+        .legend-backend { border-left-color: #1e88e5; color: #64b5f6; }
+        .legend-services { border-left-color: #388e3c; color: #81c784; }
+        .legend-storage { border-left-color: #f57c00; color: #ffb74d; }
+        .legend-color { width: 12px; height: 12px; border-radius: 50%; margin-right: 12px; box-shadow: 0 0 8px currentColor; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🎨 ARCHITETTURA MICROSERVIZI</h1>
+    <p>Sistema di rendering 3D con background removal</p>
+</div>
+
+<div class="diagram-container">
+    <div class="mermaid" id="diagram">
+        graph TB
+        classDef client fill:#ff1493,stroke:#ffffff,stroke-width:4px,color:#ffffff;
+        classDef backend fill:#1e3a8a,stroke:#ffffff,stroke-width:4px,color:#ffffff;
+        classDef services fill:#166534,stroke:#ffffff,stroke-width:4px,color:#ffffff;
+        classDef storage fill:#ea580c,stroke:#ffffff,stroke-width:4px,color:#ffffff;
+
+        U[👩‍💻 USER INTERFACE<br/>📱 Web/Mobile App]:::client
+        APIG[🛡️ API GATEWAY<br/>🔒 Auth & Rate Limit]:::backend
+        ORCH[🎯 ORCHESTRATOR<br/>⚙️ Workflow Manager]:::backend
+        DB[(🐘 POSTGRESQL<br/>💾 Jobs & Metadata)]:::backend
+        MQ[📨 RABBITMQ<br/>🔄 Task Queue]:::backend
+        BRS[✂️ BACKGROUND REMOVAL<br/>🤖 AI Service]:::services
+        BLRS[🎨 BLENDER RENDERER<br/>🏗️ 3D Processing]:::services
+        S3[📦 S3 OBJECT STORAGE<br/>🖼️ Images & Results]:::storage
+        FS[📂 BLEND FILES<br/>🎯 3D Assets]:::storage
+
+        U -->|"1"| APIG
+        APIG -->|"2"| ORCH
+        ORCH -->|"3"| DB
+        ORCH -->|"4"| MQ
+        MQ -->|"5"| BRS
+        BRS -->|"6"| S3
+        BRS -->|"7"| S3
+        BRS -->|"8"| DB
+        BRS -->|"9"| MQ
+        MQ -->|"10"| BLRS
+        BLRS -->|"11"| FS
+        BLRS -->|"12"| S3
+        BLRS -->|"13"| S3
+        BLRS -->|"14"| DB
+        BLRS -->|"15"| ORCH
+        U -->|"16"| S3
+    </div>
+</div>
+
+<div class="control-panel">
+    <button class="control-btn" onclick="previousStep()">⬅️ Indietro</button>
+    <button class="control-btn reset" onclick="resetAnimation()">🔄 Reset</button>
+    <button class="control-btn" onclick="nextStep()">Avanti ➡️</button>
+</div>
+
+<div class="status-panel" id="status">
+    <div class="step-counter" id="stepCounter">PREPARAZIONE...</div>
+    <div id="stepDescription">Caricamento diagramma...</div>
+</div>
+
+<div class="legend">
+    <div class="legend-item legend-client"><div class="legend-color" style="background: #ff1493;"></div><strong>CLIENT</strong></div>
+    <div class="legend-item legend-backend"><div class="legend-color" style="background: #1e88e5;"></div><strong>BACKEND</strong></div>
+    <div class="legend-item legend-services"><div class="legend-color" style="background: #388e3c;"></div><strong>PROCESSING</strong></div>
+    <div class="legend-item legend-storage"><div class="legend-color" style="background: #f57c00;"></div><strong>STORAGE</strong></div>
+</div>
+
+<script>
+    let currentStep = -1;
+
+    const flowSteps = [
+        { step: 1, description: "📤 USER: Upload immagine", highlightNodes: ['U'], highlightEdges: [], edgeStatus: 'success' },
+        { step: 2, description: "➡️ APIG: Riceve richiesta", highlightNodes: ['APIG'], highlightEdges: [0], edgeStatus: 'success' },
+        { step: 3, description: "⚙️ ORCH: Gestisce workflow", highlightNodes: ['ORCH'], highlightEdges: [1], edgeStatus: 'success' },
+        { step: 4, description: "💾 DB: Store metadati job", highlightNodes: ['DB', 'ORCH'], highlightEdges: [2], edgeStatus: 'success' },
+        { step: 5, description: "📨 MQ: Accoda task BG Removal", highlightNodes: ['MQ', 'ORCH'], highlightEdges: [3], edgeStatus: 'success' },
+        { step: 6, description: "🤖 BRS: Riceve task BG Removal", highlightNodes: ['BRS', 'MQ'], highlightEdges: [4], edgeStatus: 'success' },
+        { step: 7, description: "🖼️ BRS: Prende immagine da S3", highlightNodes: ['S3', 'BRS'], highlightEdges: [5], edgeStatus: 'success' },
+        { step: 8, description: "🖼️ BRS: Salva img processata su S3", highlightNodes: ['S3', 'BRS'], highlightEdges: [6], edgeStatus: 'success' },
+        { step: 9, description: "💾 DB: BRS aggiorna stato", highlightNodes: ['DB', 'BRS'], highlightEdges: [7], edgeStatus: 'success' },
+        { step: 10, description: "📨 MQ: BRS accoda task Render", highlightNodes: ['MQ', 'BRS'], highlightEdges: [8], edgeStatus: 'success' },
+        { step: 11, description: "🔥 BLRS: Riceve task Render (ERRORE SIMULATO)", highlightNodes: ['BLRS', 'MQ'], highlightEdges: [9], edgeStatus: 'error' },
+        { step: 12, description: "📦 BLRS: Prende assets 3D da FS", highlightNodes: ['FS', 'BLRS'], highlightEdges: [10], edgeStatus: 'success' },
+        { step: 13, description: "🖼️ BLRS: Prende img proc. da S3", highlightNodes: ['S3', 'BLRS'], highlightEdges: [11], edgeStatus: 'success' },
+        { step: 14, description: "🖼️ BLRS: Salva render finale su S3", highlightNodes: ['S3', 'BLRS'], highlightEdges: [12], edgeStatus: 'success' },
+        { step: 15, description: "💾 DB: BLRS aggiorna stato finale", highlightNodes: ['DB', 'BLRS'], highlightEdges: [13], edgeStatus: 'success' },
+        { step: 16, description: "🔔 ORCH: BLRS notifica fine", highlightNodes: ['ORCH', 'BLRS'], highlightEdges: [14], edgeStatus: 'success' },
+        { step: 17, description: "📥 USER: Download risultato da S3", highlightNodes: ['U', 'S3'], highlightEdges: [15], edgeStatus: 'success' }
+    ];
+
+    function highlightStep(stepIndex) {
+        const diagramDiv = document.getElementById('diagram');
+        const svg = diagramDiv.querySelector('svg');
+        if (!svg) { console.error("SVG non trovato."); return; }
+
+        clearHighlights(svg);
+
+        if (stepIndex < 0 || stepIndex >= flowSteps.length) {
+            if (stepIndex === -1) resetAnimationVisuals();
+            return;
+        }
+
+        const step = flowSteps[stepIndex];
+        document.getElementById('stepCounter').textContent = `STEP ${step.step}/${flowSteps.length}`;
+        document.getElementById('stepDescription').textContent = step.description;
+
+        step.highlightNodes.forEach(nodeId => {
+            const nodeElement = svg.querySelector(`g.node[id^="flowchart-${nodeId}-"]`) ||
+                Array.from(svg.querySelectorAll('g.node')).find(n => n.id && (n.id.includes(`-${nodeId}-`) || n.id === nodeId || (n.textContent && n.textContent.toUpperCase().includes(nodeId.toUpperCase()))));
+            if (nodeElement) nodeElement.classList.add('node-active');
+            else console.warn(`Nodo "${nodeId}" non trovato.`);
+        });
+
+        const allEdgeGroups = svg.querySelectorAll('g.edgePath');
+        const edgeStatus = step.edgeStatus || 'success';
+
+        step.highlightEdges.forEach(edgeIndex => {
+            if (allEdgeGroups[edgeIndex]) {
+                const edgeGroup = allEdgeGroups[edgeIndex];
+                const linePath = edgeGroup.querySelector('path.path');
+                const arrowheadPath = edgeGroup.querySelector('path.arrowhead');
+
+                if (linePath) {
+                    linePath.classList.add('flow-active', edgeStatus === 'error' ? 'flow-error' : 'flow-success');
+                } else { console.warn(`path.path non trovato per edge ${edgeIndex}`); }
+
+                if (arrowheadPath) {
+                    arrowheadPath.classList.add('arrowhead-active', edgeStatus === 'error' ? 'arrowhead-error' : 'arrowhead-success');
+                } else {
+                    if (linePath && (linePath.style.markerEnd || linePath.getAttribute('marker-end'))) {
+                        const markerUrl = linePath.style.markerEnd || linePath.getAttribute('marker-end');
+                        if (markerUrl && markerUrl.includes("url(#")) {
+                            const markerId = markerUrl.slice(5, -1);
+                            const marker = svg.querySelector(`defs marker#${markerId} path`);
+                            if (marker) {
+                                marker.classList.add('arrowhead-marker-active', edgeStatus === 'error' ? 'arrowhead-marker-error' : 'arrowhead-marker-success');
+                            } else { console.warn(`Marker con ID "${markerId}" non trovato per edge ${edgeIndex}`);}
+                        }
+                    } else {
+                        console.warn(`path.arrowhead e marker non trovati per edge ${edgeIndex}`);
+                    }
+                }
+            } else { console.warn(`Gruppo g.edgePath con indice ${edgeIndex} non trovato.`); }
+        });
+    }
+
+    function clearHighlights(svg) {
+        if (!svg) return;
+        svg.querySelectorAll('.node-active').forEach(el => el.classList.remove('node-active'));
+
+        const arrowRelatedClasses = [
+            'flow-active', 'flow-success', 'flow-error',
+            'arrowhead-active', 'arrowhead-success', 'arrowhead-error',
+            'arrowhead-marker-active', 'arrowhead-marker-success', 'arrowhead-marker-error'
+        ];
+        svg.querySelectorAll('g.edgePath > path.path, g.edgePath > path.arrowhead, defs marker path').forEach(el => {
+            arrowRelatedClasses.forEach(cls => el.classList.remove(cls));
+        });
+    }
+
+    function resetAnimationVisuals() {
+        const diagramDiv = document.getElementById('diagram');
+        const svg = diagramDiv.querySelector('svg');
+        if (svg) clearHighlights(svg);
+        document.getElementById('stepCounter').textContent = `STEP 0/${flowSteps.length}`;
+        document.getElementById('stepDescription').textContent = "Premi 'Avanti' per iniziare il flusso...";
+    }
+
+    function nextStep() {
+        if (currentStep < flowSteps.length - 1) {
+            currentStep++;
+            highlightStep(currentStep);
+        }
+    }
+
+    function previousStep() {
+        if (currentStep >= 0) {
+            currentStep--;
+            highlightStep(currentStep);
+        }
+    }
+
+    function resetAnimation() {
+        currentStep = -1;
+        resetAnimationVisuals();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            flowchart: { nodeSpacing: 120, rankSpacing: 90, curve: 'basis' },
+        });
+        try {
+            await mermaid.run({ querySelector: '.mermaid' });
+            resetAnimation();
+        } catch (e) {
+            console.error("Errore rendering Mermaid:", e);
+            document.getElementById('status').innerHTML = "<div style='color:red;'>Errore caricamento diagramma.</div>";
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextStep(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); previousStep(); }
+        else if (e.key.toLowerCase() === 'r') { e.preventDefault(); resetAnimation(); }
+    });
+</script>
+
+</body>
+</html>
