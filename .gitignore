@@ -1,33 +1,33 @@
-# Ignore the virtual environment directory
-.venv/
-venv/
-env/
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# Ignore Python cache files
-__pycache__/
-*.pyc
-*.pyo
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# Ignore IDE configurations
-.idea/
-.vscode/
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
 
-# Ignore log files
-*.log
-
-# Ignore output files
-*.out
-*.tmp
-
-# Ignore system files
-.DS_Store
-Thumbs.db
-
-# Ignore dependency files
-*.egg-info/
-dist/
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Ignore test files
-*.coverage
-.pytest_cache/
+### VS Code ###
+.vscode/
