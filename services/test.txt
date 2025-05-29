@@ -1,0 +1,2 @@
+Qua vanno i vari servizi del progetto, dunque progetti python e java! Per ogni microservizio creare un folder!
+
