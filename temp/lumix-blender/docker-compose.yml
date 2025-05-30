@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  blender:
+    image: linuxserver/blender:4.4.1-ls161
+
+    command: blender -b -P main.py -- --image_path ../../assets/car.jpg --output_path output/final.png
+    volumes:
+      - ./workspace:/workspace
+      - ../../assets:/assets:ro
+    working_dir: /workspace
+    # environment:
+    #   - PUID=1000
+    #   - PGID=1000
+    #   - TZ=Europe/Rome
+    restart: on-failure

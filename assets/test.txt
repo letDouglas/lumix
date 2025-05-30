@@ -1,1 +1,1 @@
-Files aggiuntivi per il readme
+Files aggiuntivi per il readme e per eventuali test per cartella temp
