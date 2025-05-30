@@ -42,18 +42,13 @@ The project involves developing a Spring Boot REST service that:
 ### 🧭 1. Animated Architecture Flow – Rendering Pipeline
 
 > A dynamic and interactive diagram showing how the rendering flow works across services.
-
-[🔗 View Animated Diagram (HTML)](docs/animated-flow.html)
-
-![Static preview](docs/detailed-flow-architecture.png)
-
 ---
 
 ### 🧱 2. Detailed Static Flow – Technical Components
 
 > A high-level overview of the services and technologies involved in the system architecture.
 
-![Detailed Flow](docs/detailed-flow-architecture.png)
+![Detailed Flow](docs/flowcharts/detailed-flow-architecture.png)
 
 ---
 
@@ -61,7 +56,7 @@ The project involves developing a Spring Boot REST service that:
 
 > A minimal and easy-to-understand flow for introducing the system to non-technical stakeholders.
 
-![Simple Static Flow](docs/simple-static-flow.jpg)
+![Simple Static Flow](docs/flowcharts/simple-static-flow.jpg)
 
 ### Activities
 
