@@ -42,6 +42,8 @@ The project involves developing a Spring Boot REST service that:
 ### 🧭 1. Animated Architecture Flow – Rendering Pipeline
 
 > A dynamic and interactive diagram showing how the rendering flow works across services.
+
+[View the live demo](https://letdouglas.github.io/lumix/)
 ---
 
 ### 🧱 2. Detailed Static Flow – Technical Components
