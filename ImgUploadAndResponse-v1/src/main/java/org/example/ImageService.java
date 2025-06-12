@@ -21,7 +21,10 @@ public class ImageService {
             int height = bufferedImage.getHeight();
             int width = bufferedImage.getWidth();
 
-            return new ImageDTO(byteArray, fileName, fileType, fileSize, height, width);
+            // Extract pixel array
+            int[] pixelArray = bufferedImage.getRGB(0, 0, width, height, null, 0, width);
+
+            return new ImageDTO(byteArray, fileName, fileType, fileSize, height, width, pixelArray);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

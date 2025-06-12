@@ -7,21 +7,21 @@ public class ImageDTO {
     private long fileSize;
     private int height;
     private int width;
+    private int[] pixelArray;
 
-    // Constructors, getters, and setters
     public ImageDTO() {
     }
 
-    public ImageDTO(byte[] byteArray, String fileName, String fileType, long fileSize, int height, int width) {
+    public ImageDTO(byte[] byteArray, String fileName, String fileType, long fileSize, int height, int width, int[] pixelArray) {
         this.byteArray = byteArray;
         this.fileName = fileName;
         this.fileType = fileType;
         this.fileSize = fileSize;
         this.height = height;
         this.width = width;
+        this.pixelArray = pixelArray;
     }
 
-    // Getters and setters
     public byte[] getByteArray() {
         return byteArray;
     }
@@ -68,5 +68,13 @@ public class ImageDTO {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    public int[] getPixelArray() {
+        return pixelArray;
+    }
+
+    public void setPixelArray(int[] pixelArray) {
+        this.pixelArray = pixelArray;
     }
 }
