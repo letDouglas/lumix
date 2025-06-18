@@ -1,33 +1,33 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Ignore the virtual environment directory
+.venv/
+venv/
+env/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+# Ignore IDE configurations
+.idea/
 .vscode/
+
+# Ignore log files
+*.log
+
+# Ignore output files
+*.out
+*.tmp
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore dependency files
+*.egg-info/
+dist/
+build/
+
+# Ignore test files
+*.coverage
+.pytest_cache/
