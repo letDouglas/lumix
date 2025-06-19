@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FBX Renderer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    #status {
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    #renderedImage {
+      max-width: 100%;
+      margin-top: 20px;
+      display: none;
+    }
+    .error {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+    .success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+<h2>Upload FBX File for Rendering</h2>
+
+<form id="uploadForm" enctype="multipart/form-data">
+  <input type="file" name="file" accept=".fbx" required />
+  <button type="submit">Upload and Render</button>
+</form>
+
+<p id="status"></p>
+<img id="renderedImage" alt="Rendered result" />
+
+<script>
+  document.getElementById("uploadForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const status = document.getElementById("status");
+    const image = document.getElementById("renderedImage");
+
+    status.textContent = "Uploading and rendering...";
+    status.className = "";
+    image.style.display = "none";
+
+    try {
+      const response = await fetch("/api/fbx/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error);
+      }
+
+      const filename = await response.text();
+      image.src = "/api/fbx/download/" + encodeURIComponent(filename);
+      image.style.display = "block";
+      status.textContent = "Rendering complete!";
+      status.className = "success";
+    } catch (err) {
+      status.textContent = "Error: " + err.message;
+      status.className = "error";
+      console.error("Upload error:", err);
+    }
+  });
+</script>
+</body>
+</html>
