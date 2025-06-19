@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clients Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container my-4">
+<div class="row">
+    <div class="col-md-8 mx-auto rounded border p-4">
+        <h2 class="text-center mb-5">New Client</h2>
+
+        <form method="post" th:object="${clientDto}">
+<div class="row mb-3">
+    <label class="col-sm-4 col-form-label">First Name</label>
+    <div class="col-sm-8">
+        <input class="form-control" th:field="${clientDto.firstName}">
+        <p th:if="${#fields.hasErrors('firstName')}"
+           th:errorclass="text-danger"
+           th:errors="${clientDto.firstName}"></p>
+    </div>
+</div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Last Name</label>
+                <div class="col-sm-8">
+                    <input class="form-control" th:field="${clientDto.lastName}">
+                    <p th:if="${#fields.hasErrors('lastName')}"
+                       th:errorclass="text-danger"
+                       th:errors="${clientDto.lastName}"></p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Email</label>
+                <div class="col-sm-8">
+                    <input class="form-control" th:field="${clientDto.email}">
+                    <p th:if="${#fields.hasErrors('email')}"
+                       th:errorclass="text-danger"
+                       th:errors="${clientDto.email}"></p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Phone</label>
+                <div class="col-sm-8">
+                    <input class="form-control" th:field="${clientDto.phone}">
+                    <p th:if="${#fields.hasErrors('phone')}"
+                       th:errorclass="text-danger"
+                       th:errors="${clientDto.phone}"></p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Address</label>
+                <div class="col-sm-8">
+                    <input class="form-control" th:field="${clientDto.address}">
+                    <p th:if="${#fields.hasErrors('address')}"
+                       th:errorclass="text-danger"
+                       th:errors="${clientDto.address}"></p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Status</label>
+                <div class="col-sm-8">
+                    <select class="form-control" th:field="${clientDto.status}">
+                    <option value="New">New</option>
+                    <option value="Permanent">Permanent</option>
+                    <option value="Lead">Lead</option>
+                    <option value="Occasional">Occasional</option>
+                    <option value="Inactive">Inactive</option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('status')}"
+                       th:errorclass="text-danger"
+                       th:errors="${clientDto.status}"></p>
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="offset-sm-4 col-sm-4 d-grid">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+<div class="col-sm-4 d-grid">
+<a class="btn btn-outline-primary" href="/clients">Cancel</a>
+
+    </div>
+</div>
+        </form>
+    </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+</body>
+</html>
