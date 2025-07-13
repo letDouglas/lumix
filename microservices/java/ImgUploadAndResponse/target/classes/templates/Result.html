@@ -14,13 +14,10 @@
 <h2>Evaluation Result</h2>
 <p th:if="${meetsCriteria}">Image meets the criteria: less than 2MB and in PNG or JPG/JPEG format.</p>
 <p th:unless="${meetsCriteria}">Image does not meet the criteria: either too large or not in PNG or JPG/JPEG format.</p>
-<h2>Upload Status</h2>
-<p th:if="${uploadSuccess}">Image uploaded successfully to the bucket.</p>
-<p th:unless="${uploadSuccess}">Image failed to upload to the bucket.</p>
+
 </body>
 </html>
 
-
-<!--this page exists only to confirm that the program is actually working
-remove after pushing to prod
-haha just kidding we're the programming equivalent of 4 guys in a shed we have no prod-->
+//this page exists only to confirm that the program is actually working
+//remove after pushing to prod
+//haha just kidding we're the programming equivalent of 4 guys in a shed we have no prod

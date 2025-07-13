@@ -1,8 +1,12 @@
 package org.example;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +22,9 @@ public class Controller {
 
     @Autowired
     private ResponseLogic responseLogic;
+
+    @Autowired
+    private InMemoryBucketService inMemoryBucketService;
 
     @GetMapping("/")
     public String index() {
@@ -41,8 +48,16 @@ public class Controller {
                 return "upload";
             }
 
+            // Upload the file to the in-memory bucket only if it meets the criteria
+            boolean uploadSuccess = inMemoryBucketService.uploadFile(imageDTO.getFileName(), file.getBytes());
+            if (!uploadSuccess) {
+                model.addAttribute("error", "ERROR: Failed to upload the file");
+                return "upload";
+            }
+
             model.addAttribute("imageDTO", imageDTO);
             model.addAttribute("meetsCriteria", responseLogic.isMeetsCriteria());
+            model.addAttribute("uploadSuccess", uploadSuccess);
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", "ERROR: An unexpected error occurred");
@@ -50,5 +65,22 @@ public class Controller {
         }
 
         return "result";
+    }
+
+    @GetMapping("/download/{fileName:.+}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable String fileName) {
+        byte[] fileContent = inMemoryBucketService.downloadFile(fileName);
+
+        if (fileContent == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData(fileName, fileName);
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(fileContent);
     }
 }
