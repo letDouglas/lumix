@@ -1,3 +1,6 @@
+OUTDATED, USE AS REFERENCE BUT NOT THE FINAL ONE
+
+
 Dependencies that you need to install on a VM that has this repo.
 
 JAVA 21

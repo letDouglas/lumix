@@ -1,0 +1,6 @@
+path: C:\Users\NOAHDECASTRO\Desktop\image-segmentation-yolov8-main\data
+train: images/train 
+val: images/val  
+
+nc: 1
+names: ['duck']
