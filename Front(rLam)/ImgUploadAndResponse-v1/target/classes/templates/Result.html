@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Metadata</title>
+</head>
+<body>
+<h1>Image Metadata</h1>
+<p>File Name: <span th:text="${imageDTO.fileName}"></span></p>
+<p>File Type: <span th:text="${imageDTO.fileType}"></span></p>
+<p>File Size: <span th:text="${imageDTO.fileSize}"></span> bytes</p>
+<p>Height: <span th:text="${imageDTO.height}"></span> pixels</p>
+<p>Width: <span th:text="${imageDTO.width}"></span> pixels</p>
+<h2>Evaluation Result</h2>
+<p th:if="${meetsCriteria}">Image meets the criteria: less than 2MB and in PNG or JPG/JPEG format.</p>
+<p th:unless="${meetsCriteria}">Image does not meet the criteria: either too large or not in PNG or JPG/JPEG format.</p>
+
+</body>
+</html>
+
+//this page exists only to confirm that the program is actually working
+//remove after pushing to prod
+//haha just kidding we're the programming equivalent of 4 guys in a shed we have no prod
