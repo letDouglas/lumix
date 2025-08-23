@@ -1,17 +1,17 @@
 package org.example;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 @Entity
 @Table(name = "images")
-public class ImageEntity {             // PORCO DIO PORCO DIO INFAME BASTARDO MADONNA FOTTUTA TROIA
+public class ImageEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     //AAAAAAAAAAAAAAAAAAAA NON FUNZIONA MI UCCIDO
     private Long id;
 
     private String fileName;
@@ -19,9 +19,8 @@ public class ImageEntity {             // PORCO DIO PORCO DIO INFAME BASTARDO MA
     private long fileSize;
     private int height;
     private int width;
-    private String s3ObjectKey; // This will store the S3 object key/code
+    private String s3ObjectKey;
 
-    // Constructors, getters, and setters
     public ImageEntity() {}
 
     public ImageEntity(String fileName, String fileType, long fileSize, int height, int width, String s3ObjectKey) {
@@ -33,7 +32,7 @@ public class ImageEntity {             // PORCO DIO PORCO DIO INFAME BASTARDO MA
         this.s3ObjectKey = s3ObjectKey;
     }
 
-    // Getters and setters for all fields
+    // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getFileName() { return fileName; }
