@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Image</title>
+    <script>
+        function showProcessing() {
+            document.getElementById("processing").style.display = "block";
+            setTimeout(function() {
+                document.getElementById("uploadForm").submit();
+            }, 500);
+            return false;
+        }
+    </script>
+</head>
+<body>
+<h1>Upload Image</h1>
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+<form id="uploadForm" method="POST" action="/upload" enctype="multipart/form-data" onsubmit="return showProcessing()">
+    <input type="file" name="file" accept="image/*" required>
+    <button type="submit">Upload</button>
+    <p id="processing" style="display: none;">Processing...</p>
+</form>
+</body>
+</html>
+
+<!--setTimeout is there only to check that the "Processing request" line actually gets printed
+remove whenever people start complaining that the site is too slow - boom instant massive improvement-->
