@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Images</title>
+</head>
+<body>
+<h1>All Uploaded Images</h1>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>File Name</th>
+        <th>File Type</th>
+        <th>File Size</th>
+        <th>Height</th>
+        <th>Width</th>
+        <th>Download from S3</th>
+        <th>Download from H2</th>
+    </tr>
+    <tr th:each="image : ${images}">
+        <td th:text="${image.id}"></td>
+        <td th:text="${image.fileName}"></td>
+        <td th:text="${image.fileType}"></td>
+        <td th:text="${image.fileSize}"></td>
+        <td th:text="${image.height}"></td>
+        <td th:text="${image.width}"></td>
+        <td>
+            <a th:href="@{/download/{fileName}(fileName=${image.s3ObjectKey})}">From S3</a>
+        </td>
+        <td>
+            <a th:href="@{/download-from-h2/{id}(id=${image.id})}">From H2</a>
+        </td>
+    </tr>
+</table>
+<a href="/">Back to Upload</a>
+</body>
+</html>
