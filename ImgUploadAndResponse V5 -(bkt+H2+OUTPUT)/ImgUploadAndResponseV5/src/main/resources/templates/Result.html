@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Metadata</title>
+    <style>
+        #processing-message {
+            font-size: 30px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+        }
+        #rendered-image-message {
+            font-size: 24px;
+            color: green;
+            text-align: center;
+            margin: 20px 0;
+        }
+        #rendered-image-link {
+            font-size: 24px;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h2>Rendered Image</h2>
+<p id="processing-message" style="display: block;">Processing...</p>
+<p id="rendered-image-message" style="display: none; color: green;">
+    Your rendered image is ready!
+    <a id="rendered-image-link" style="display: none;" th:href="@{/download/}">Download Rendered Image</a>
+</p>
+<a href="/">Back to Upload</a>
+<a href="/images">View All Images</a>
+
+<script>
+    function checkForRenderedImage() {
+        const eventSource = new EventSource("/sse-rendered-image");
+        eventSource.onmessage = function(event) {
+            if (event.data) {
+                const renderedFileName = event.data;
+                const downloadLink = document.getElementById("rendered-image-link");
+                const message = document.getElementById("rendered-image-message");
+                const processingMessage = document.getElementById("processing-message");
+
+                if (downloadLink && message && processingMessage) {
+                    // Hide "Processing..."
+                    processingMessage.style.display = "none";
+                    // Show "ready" message and download link
+                    downloadLink.href = "/download/" + renderedFileName;
+                    downloadLink.style.display = "inline";
+                    message.style.display = "block";
+                }
+            }
+        };
+        eventSource.onerror = function() {
+            eventSource.close();
+            setTimeout(checkForRenderedImage, 5000);
+        };
+    }
+    // Start checking when the page loads
+    window.onload = checkForRenderedImage;
+</script>
+</body>
+</html>
+
+<!--<h1>Image Metadata</h1>
+<p>File Name: <span th:text="${imageDTO.fileName}"></span></p>
+<p>File Type: <span th:text="${imageDTO.fileType}"></span></p>
+<p>File Size: <span th:text="${imageDTO.fileSize}"></span> bytes</p>
+<p>Width: <span th:text="${imageDTO.width}"></span> pixels</p>
+
+<h2>Evaluation Result</h2>
+<p th:if="${meetsCriteria}">Image meets the criteria: less than 2MB and in PNG or JPG/JPEG format.</p>
+<p th:unless="${meetsCriteria}">Image does not meet the criteria: either too large or not in PNG or JPG/JPEG format.</p>
+
+<h2>Upload Status</h2>
+<p th:if="${uploadSuccess}">Image uploaded successfully to the bucket.</p>
+<p th:unless="${uploadSuccess}">Image failed to upload to the bucket.</p>-->
+
+
+<!--this page exists only to confirm that the program is actually working
+remove after pushing to prod
+haha just kidding we're the programming equivalent of 4 guys in a shed we have no prod-->

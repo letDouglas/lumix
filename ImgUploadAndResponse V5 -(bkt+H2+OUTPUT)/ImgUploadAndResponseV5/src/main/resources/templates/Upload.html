@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Custom Image Upload</title>
+    <script>
+        function showProcessing() {
+            document.getElementById("processing").style.display = "block";
+            setTimeout(function() {
+                document.getElementById("uploadForm").submit();
+            }, 500);
+            return false;
+        }
+    </script>
+</head>
+<body>
+<form action="/clear-database" method="post" onsubmit="return confirm('Sei sicuro di voler svuotare il registro immagini?');">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <button type="submit">Clear Database</button>
+</form>
+<h1>Upload Your Image Here</h1>
+<p>Please select an image file (PNG or JPG, max 2MB).</p>
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+<form id="uploadForm" method="POST" action="/upload" enctype="multipart/form-data" onsubmit="return showProcessing()">
+    <input type="file" name="file" accept="image/*" required>
+    <button type="submit">Upload</button>
+    <p id="processing" style="display: none; font-size: 24px;">Processing...</p>
+</form>
+<a href="/images">Image Backlog</a>
+</body>
+</html>
+
+
+<!--setTimeout is there only to check that the "Processing request" line actually gets printed
+remove whenever people start complaining that the site is too slow - boom instant massive improvement-->
